@@ -5,11 +5,11 @@ setup(
     author_email='ttt.nakamura1031@gmail.com',
     name='chainer_sagemaker_tools',
     description='Some extensions and tools to run Chainer jobs on Amazon SageMaker',
-    version='0.1.1',
+    version='0.1.2',
     packages=['sagemaker_tools', 'sage_extensions'],
     install_requires=[
         'boto3',
-        'pyyaml>=4.2b1',
+        'pyyaml<4,>=3.13',
         'sagemaker',
         'slackweb'],
     entry_points={

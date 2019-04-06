@@ -55,4 +55,3 @@ def _get_latest_modified_object(dirname, key):
         return
     latest = sorted(files, key=lambda x: x[1])[-1]
     return latest[0]
-

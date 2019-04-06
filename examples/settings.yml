@@ -1,0 +1,49 @@
+# This setting file has three keys.
+# - upload_data (optional)
+# - estimator
+# - inputs
+
+# `upload_data` (optional) - Parameters for the upload_data function.
+# It is a list of 'path', 'key_prefix' and 'name'.
+# 'name' and a S3 path which is a return value of the upload_data func
+# are added to 'inputs' as a key-value pair.
+# The uploaded data directory can be accessed with 
+# os.getenv('SM_CHANNEL_<NAME>') from ML Instance.
+# In following case, os.getenv('SM_CHANNEL_CONFIG_DIR')
+upload_data:
+  - path: 'configs'
+    key_prefix: 'config'
+    name: 'config_dir'
+
+# `estimator` - Parameters for the Estimator constructor.
+# It contains multiple key-value pairs. Details are described in
+# https://sagemaker.readthedocs.io/en/stable/sagemaker.chainer.html
+estimator:
+  entry_point: 'train.py'
+  source_dir: 'src'
+  input_mode: 'File'
+  role: '<role - This role can be obtained by running get_execution_role() in Notebook Instance>'
+  use_mpi: False
+  train_instance_count: 1
+  train_instance_type: 'ml.p2.xlarge'
+  train_volume_size: 30
+  hyperparameters:
+    epochs: 10
+    batch-size: 64
+  train_max_run: 432000  # 5 * 24 * 60 * 60
+  framework_version: '5.0.0'
+  tags: 
+    - Key: "dataset"
+      Value: "cifar10"
+    - Key: "model"
+      Value: "vgg16"
+
+# `inputs` - Parameters for the fit function.
+# It contains multiple key-value pairs. The key names are arbitrary
+# and the values are s3 uri.
+# These directories can be accessed with 
+# os.getenv('SM_CHANNEL_<key name>') from ML Instance.
+# In following case, os.getenv('SM_CHANNEL_TRAIN') and os.getenv('SM_CHANNEL_TEST')
+inputs:
+  train: 's3://<bucket>/notebook/chainer_cifar/train'
+  test: 's3://<bucket>/notebook/chainer_cifar/test'

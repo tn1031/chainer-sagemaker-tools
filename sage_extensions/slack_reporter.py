@@ -61,7 +61,7 @@ def _slack_report(trainer, keys, hook, channel, pretext,
         
     slack.notify(channel=channel,
         text='Training Report from %s' % job_name,
-        attachments=attachments)
+        attachments=attachments)  # [todo] Exception handling
 
 def _upload_figure(name, out, bucket, public_bucket_name, region):
     path = os.path.join(out, name)
