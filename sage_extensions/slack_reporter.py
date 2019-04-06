@@ -6,16 +6,16 @@ import slackweb
 from chainer.training import extension
 
 def slack_report(keys, hook, channel, pretext=None,
-                 public_bucket_name=None, region=None):
+                 public_bucket_name=None):
     @extension.make_extension(trigger=(1, 'epoch'), priority=0)
     def slack_report(trainer):
         _slack_report(trainer, keys, hook, channel, pretext,
-                      public_bucket_name, region)
+                      public_bucket_name)
 
     return slack_report
 
 def _slack_report(trainer, keys, hook, channel, pretext,
-                  public_bucket_name, region):
+                  public_bucket_name):
     slack = slackweb.Slack(url=hook)
 
     log_report = trainer.get_extension('LogReport')
@@ -45,7 +45,7 @@ def _slack_report(trainer, keys, hook, channel, pretext,
             if os.path.isfile(os.path.join(trainer.out, name)):
                 try:
                     url = _upload_figure(name, trainer.out, bucket,
-                                         public_bucket_name, region)
+                                         public_bucket_name)
                     attachments.append({'color': color,
                                         'image_url': url,
                                         'fields': [{'value': name}]})
@@ -63,7 +63,7 @@ def _slack_report(trainer, keys, hook, channel, pretext,
         text='Training Report from %s' % job_name,
         attachments=attachments)  # [todo] Exception handling
 
-def _upload_figure(name, out, bucket, public_bucket_name, region):
+def _upload_figure(name, out, bucket, public_bucket_name):
     path = os.path.join(out, name)
 
     with open(path, 'rb') as f:
@@ -72,5 +72,7 @@ def _upload_figure(name, out, bucket, public_bucket_name, region):
     obj = bucket.Object(dst)
     obj.upload_file(path)
 
-    url = 'https://s3-{}.amazonaws.com/{}/{}'.format(region, public_bucket_name, dst)
-    return url
+    bucket_location = boto3.client('s3').get_bucket_location(Bucket=public_bucket_name)
+    url_base = 'https://s3-{}.amazonaws.com/{}/{}'
+    return url_base.format(bucket_location['LocationConstraint'],
+                           public_bucket_name, dst)

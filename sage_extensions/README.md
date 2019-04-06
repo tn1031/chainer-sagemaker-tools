@@ -18,15 +18,13 @@ hook = '<webhook_url>'
 channel = '<slack_channel_name>'
 pretext = 'Train cifar using VGG16'
 public_bucket_name = '<s3_bucket_name>'
-region = 'us-west-2'
 
 trainer.extend(
     slack_report(keys,
                  hook,
                  channel,
                  pretext,
-                 public_bucket_name,
-                 region),
+                 public_bucket_name),
     trigger=val_interval)
 ```
 
