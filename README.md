@@ -34,7 +34,7 @@ $ smtrain <job_name> <path_to_setting> [-p <aws_profile_name>]
 ```
 
 - `job_name` - Training job name. It must be unique in the same AWS account.
-- `path_to_setting` - Path to the setting file. The format of this file is described in [here](example/settings.yml).
+- `path_to_setting` - Path to the setting file. The format of this file is described in [here](examples/settings.yml).
 - `aws_profile_name` - The name of profile that are stored in `~/.aws/config` .
 
 ### Example
