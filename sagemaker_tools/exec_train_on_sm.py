@@ -7,9 +7,10 @@ from boto3.session import Session
 import sagemaker
 from sagemaker import get_execution_role
 from sagemaker.chainer.estimator import Chainer
+from sagemaker.pytorch.estimator import PyTorch
 
 
-def exec_training(session, client, job_name, setting):
+def exec_training(session, client, job_name, setting, pytorch):
     sagemaker_session = sagemaker.Session(
         boto_session=session,
         sagemaker_client=client)
@@ -28,9 +29,12 @@ def exec_training(session, client, job_name, setting):
 
     estimator_args = conf['estimator']
     estimator_args['sagemaker_session'] = sagemaker_session
-    chainer_estimator = Chainer(**estimator_args)
+    if pytorch:
+        estimator = PyTorch(**estimator_args)
+    else:
+        estimator = Chainer(**estimator_args)
 
-    chainer_estimator.fit(inputs, job_name=job_name)
+    estimator.fit(inputs, job_name=job_name)
 
 
 def main():
@@ -41,6 +45,7 @@ def main():
                         help='Path to setting file.')
     parser.add_argument('--profile_name', '-p', type=str, default=None,
                         help='When execute a training from local, enter the profile name.')
+    parser.add_argument('--pytorch', '-t', action='store_true')
     args = parser.parse_args()
 
     if args.profile_name is None:
@@ -55,4 +60,4 @@ def main():
                               aws_secret_access_key=credentials.secret_key,
                               aws_session_token=credentials.token)
 
-    exec_training(session, client, args.job_name, args.setting)
+    exec_training(session, client, args.job_name, args.setting, args.pytorch)

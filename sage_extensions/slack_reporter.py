@@ -3,6 +3,7 @@ import json
 import hashlib
 import os
 import slackweb
+import warnings
 from chainer.training import extension
 
 def slack_report(keys, hook, channel, pretext=None,
@@ -19,7 +20,11 @@ def _slack_report(trainer, keys, hook, channel, pretext,
     slack = slackweb.Slack(url=hook)
 
     log_report = trainer.get_extension('LogReport')
-    current_log = log_report.log[-1]
+    try:
+        current_log = log_report.log[-1]
+    except IndexError:
+        warnings.warn('Any logs do not be reported yet.')
+        return
 
     attachments = list()
 
