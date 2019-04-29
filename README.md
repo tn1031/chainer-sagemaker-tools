@@ -4,7 +4,7 @@ This repository is a collection of tools to run SageMaker jobs.
 
 It contains
 
-- CLIs : A command line tools to use SageMaker easily. See below guidelines.
+- CLIs : Some command line tools to use SageMaker easily. See below guidelines.
 - `sage_extensions` : Some Extensionf for Chainer Trainer.
 
 # Installation
