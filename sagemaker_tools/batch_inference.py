@@ -10,7 +10,7 @@ from sagemaker.chainer.model import ChainerModel
 from sagemaker.pytorch.model import PyTorchModel
 
 
-def deploy_endpoint(session, client, endpoint_name, setting, pytorch):
+def deploy_endpoint(session, client, model_name, setting, pytorch):
     sagemaker_session = sagemaker.Session(
         boto_session=session,
         sagemaker_client=client)
@@ -21,21 +21,23 @@ def deploy_endpoint(session, client, endpoint_name, setting, pytorch):
 
     model_args = conf['model']
     model_args['sagemaker_session'] = sagemaker_session
-    model_args['name'] = endpoint_name + '-model-' + dt.now().strftime('%y%m%d%H%M')
+    model_args['name'] = model_name
     if pytorch:
         model = PyTorchModel(**model_args)
     else:
         model = ChainerModel(**model_args)
 
     deploy_args = conf['deploy']
-    deploy_args['endpoint_name'] = endpoint_name
-    # check already existing endpoint name
-    model.deploy(**deploy_args)
+    transformer = model.transformer(**deploy_args)  # register model
+
+    transform_args = conf['transform']
+    # transform_args['job_name'] = model_name + datetime.now()
+    transformer.transform(**transform_args)
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('endpoint_name', type=str,
+    parser.add_argument('model_name', type=str,
                         help='Training job name. It must be unique.')
     parser.add_argument('setting', type=str,
                         help='Path to setting file.')
@@ -56,4 +58,4 @@ def main():
                               aws_secret_access_key=credentials.secret_key,
                               aws_session_token=credentials.token)
 
-    deploy_endpoint(session, client, args.endpoint_name, args.setting, args.pytorch)
+    deploy_endpoint(session, client, args.model_name, args.setting, args.pytorch)
