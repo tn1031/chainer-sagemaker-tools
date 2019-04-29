@@ -1,0 +1,35 @@
+# This setting file has three keys.
+# - model
+# - deploy
+# - transform
+
+# `model` - Parameters for the FrameworkModel constructor.
+# Details are described in
+# https://sagemaker.readthedocs.io/en/stable/model.html
+# When using ChainerModel, see
+# https://sagemaker.readthedocs.io/en/stable/sagemaker.chainer.html#chainer-model
+model:
+  model_data: 's3://<bucket>/<path_to_model>/model.tar.gz'
+  image: '<A Docker image URI.>'
+  role: '<role - This role can be obtained by running get_execution_role() in Notebook Instance>'
+  entry_point: 'serve.py'
+  source_dir: 'src'
+
+# `deploy` - Parameters to create the batch transform job.
+# Details are described in
+# https://sagemaker.readthedocs.io/en/stable/model.html#sagemaker.model.Model.transformer
+deploy:
+  instance_type: 'ml.p2.xlarge'
+  instance_count: 1
+  tags:
+    - Key: "dataset"
+      Value: "cifar10"
+    - Key: "model"
+      Value: "vgg16"
+
+# `transform` - Parameters to run the batch transform job.
+# Details are described in
+# https://sagemaker.readthedocs.io/en/stable/transformer.html#sagemaker.transformer.Transformer.transform
+transform:
+  data: 's3://<bucket>/<path_to_data>/'
+  content_type: 'application/x-image'

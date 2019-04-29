@@ -1,0 +1,29 @@
+# This setting file has two keys.
+# - model
+# - deploy
+
+# `model` - Parameters for the FrameworkModel constructor.
+# Details are described in
+# https://sagemaker.readthedocs.io/en/stable/model.html
+# When using ChainerModel, see
+# https://sagemaker.readthedocs.io/en/stable/sagemaker.chainer.html#chainer-model
+model:
+  model_data: 's3://<bucket>/<path_to_model>/model.tar.gz'
+  image: '<A Docker image URI.>'
+  role: '<role - This role can be obtained by running get_execution_role() in Notebook Instance>'
+  entry_point: 'serve.py'
+  source_dir: 'src'
+
+# `deploy` - Parameters to deploy the model.
+# Details are described in
+# https://sagemaker.readthedocs.io/en/stable/model.html#sagemaker.model.Model.deploy
+deploy:
+  initial_instance_count: 1
+  instance_type: 'ml.c4.xlarge'
+  update_endpoint: true
+  tags:
+    - Key: "dataset"
+      Value: "cifar10"
+    - Key: "model"
+      Value: "vgg16"
+  
