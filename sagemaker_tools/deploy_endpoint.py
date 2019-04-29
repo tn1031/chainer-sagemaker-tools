@@ -1,5 +1,4 @@
 import argparse
-import os
 import yaml
 import boto3
 from boto3.session import Session
@@ -17,8 +16,6 @@ def deploy_endpoint(session, client, endpoint_name, setting, pytorch):
 
     conf = yaml.load(open(setting))
 
-    # is model uploader required?
-
     model_args = conf['model']
     model_args['sagemaker_session'] = sagemaker_session
     model_args['name'] = endpoint_name + '-model-' + dt.now().strftime('%y%m%d%H%M')
@@ -29,14 +26,13 @@ def deploy_endpoint(session, client, endpoint_name, setting, pytorch):
 
     deploy_args = conf['deploy']
     deploy_args['endpoint_name'] = endpoint_name
-    # check already existing endpoint name
     model.deploy(**deploy_args)
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('endpoint_name', type=str,
-                        help='Training job name. It must be unique.')
+                        help='Endpoint name.')
     parser.add_argument('setting', type=str,
                         help='Path to setting file.')
     parser.add_argument('--profile_name', '-p', type=str, default=None,
