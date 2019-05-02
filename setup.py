@@ -5,7 +5,7 @@ setup(
     author_email='ttt.nakamura1031@gmail.com',
     name='chainer_sagemaker_tools',
     description='Some extensions and tools to run Chainer jobs on Amazon SageMaker',
-    version='0.1.6',
+    version='0.1.6.1',
     packages=['sagemaker_tools', 'sage_extensions'],
     install_requires=[
         'boto3',
@@ -13,7 +13,7 @@ setup(
         'sagemaker',
         'slackweb'],
     entry_points={
-        'console_scripts': ['smtrain=sagemaker_tools.exec_train_on_sm:main',
+        'console_scripts': ['smtrain=sagemaker_tools.exec_train:main',
                             'smdeploy=sagemaker_tools.deploy_endpoint:main',
                             'smbatch=sagemaker_tools.batch_inference:main'],
     },
