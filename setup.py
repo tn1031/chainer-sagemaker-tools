@@ -5,7 +5,7 @@ setup(
     author_email='ttt.nakamura1031@gmail.com',
     name='chainer_sagemaker_tools',
     description='Some extensions and tools to run Chainer jobs on Amazon SageMaker',
-    version='0.1.7',
+    version='0.1.8',
     packages=['sagemaker_tools', 'sage_extensions'],
     install_requires=[
         'boto3',
