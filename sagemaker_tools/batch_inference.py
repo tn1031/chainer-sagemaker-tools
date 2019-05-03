@@ -34,8 +34,6 @@ def batch_inference(session, client, model_name, setting, pytorch):
 
     conf = yaml.load(open(setting))
 
-    model_args = conf['model']
-
     # check the target model exists
     if _model_exists(client, model_name):
         logger.info('use the registered model.')
@@ -51,6 +49,7 @@ def batch_inference(session, client, model_name, setting, pytorch):
         # Basically, models have dependencies on multiple endpoints and inference jobs,
         # so it is not easy to delete it.
         logger.info('register the new model.')
+        model_args = conf['model']
         model_args['sagemaker_session'] = sagemaker_session
         model_args['name'] = model_name
         if pytorch:
