@@ -78,7 +78,7 @@ def exec_training(session, client, job_name, setting, pytorch, max_parallel_jobs
         tuner_args['warm_start_config'] = None  # not supported yet.
 
         tuner = HyperparameterTuner(**tuner_args)
-        tuner.fit(inputs)
+        tuner.fit(inputs, job_name=job_name)
 
 
 def main():
