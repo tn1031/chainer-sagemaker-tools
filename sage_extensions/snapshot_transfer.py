@@ -23,6 +23,7 @@ def _snapshot_transfer(trainer, keys):
     module_dir = json.loads(training_env)['module_dir']
     # module_dir: 's3://<bucket_name>/<job_name>/source/sourcedir.tar.gz'
     bucket_name, job_name = module_dir.split('/')[2:4]
+    job_name = json.loads(training_env)['job_name']
 
     s3 = boto3.resource('s3')
     bucket = s3.Bucket(bucket_name)
