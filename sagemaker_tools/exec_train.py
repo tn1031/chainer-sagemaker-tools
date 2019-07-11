@@ -49,7 +49,7 @@ def exec_training(session, client, job_name, setting, pytorch, max_parallel_jobs
         estimator = Chainer(**estimator_args)
 
     if len(targets) == 0:
-        estimator.fit(inputs, job_name=job_name)
+        estimator.fit(inputs, wait=False, job_name=job_name)
     else:
         if 'tuner' in conf:
             tuner_args = conf['tuner']
