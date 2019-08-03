@@ -9,7 +9,7 @@ setup(
     packages=['sagemaker_tools', 'sage_extensions'],
     install_requires=[
         'boto3',
-        'pyyaml>=4.2b1',
+        'pyyaml<4.3,>=4.2b1',
         'sagemaker',
         'slackweb'],
     entry_points={
